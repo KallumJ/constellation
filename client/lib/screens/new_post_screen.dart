@@ -22,6 +22,20 @@ class _NewPostScreenState extends State<NewPostScreen> {
     backCamera.initialize();
   }
 
+  Future<void> takePhoto() async {
+    final backPhoto = await backCamera.captureImage();
+
+    if (frontCameraActive) {
+      final frontPhoto = await frontCamera.captureImage();
+    }
+
+    if (backPhoto case final data?) {
+      Image.memory(data); 
+
+      // TODO: now what?
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +55,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
                       return SizedBox(
                         width: 150,
                         height: 150,
-                        child: CameraPreview(camera: frontCamera)
-                        );
+                        child: CameraPreview(camera: frontCamera),
+                      );
                     } else {
                       return Container();
                     }
@@ -67,7 +81,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                       ? Icon(Icons.collections)
                       : Icon(Icons.filter),
                 ),
-                IconButton(onPressed: () {}, icon: Icon(Icons.camera)),
+                IconButton(onPressed: takePhoto, icon: Icon(Icons.camera)),
               ],
             ),
           ),
