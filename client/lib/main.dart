@@ -1,5 +1,4 @@
-import 'package:camera/camera.dart';
-import 'package:constellation/screens/new_image_post_screen.dart';
+import 'package:constellation/screens/new_post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,9 +6,6 @@ Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
 
   runApp(
     MaterialApp(
@@ -21,23 +17,19 @@ Future<void> main() async {
         ),
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: ConstellationApp(cameras: cameras),
+      home: ConstellationApp(),
       title: "Constellation",
     ),
   );
 }
 
 class ConstellationApp extends StatelessWidget {
-  const ConstellationApp({super.key, required this.cameras});
-
-  final List<CameraDescription> cameras;
+  const ConstellationApp({super.key});
 
   void handleNewPostPressed(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => NewImagePostScreen(cameras: cameras),
-      ),
+      MaterialPageRoute(builder: (context) => NewPostScreen()),
     );
   }
 
@@ -56,30 +48,30 @@ class ConstellationApp extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: "New Post"),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: "Friends"),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            handleNewPostPressed(context);
+          } else if (index == 1) {
+            handleFriendsPressed();
+          }
+        },
+      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Spacer(),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Spacer(),
-                  IconButton(
-                    onPressed: () => handleNewPostPressed(context),
-                    icon: Icon(Icons.add),
-                  ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: handleFriendsPressed,
-                    icon: Icon(Icons.people),
-                  ),
-                  Spacer(),
-                ],
-              ),
+            child: Text(
+              "Imagine there was posts here lol",
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
           ),
+          Spacer(),
         ],
       ),
     );
