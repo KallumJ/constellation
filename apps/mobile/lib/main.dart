@@ -1,22 +1,33 @@
+import 'package:camera/camera.dart';
 import 'package:constellation/screens/new_image_post_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+// Ensure that plugin services are initialized so that `availableCameras()`
+// can be called before `runApp()`
+WidgetsFlutterBinding.ensureInitialized();
+
+// Obtain a list of the available cameras on the device.
+final cameras = await availableCameras();
+
   runApp(
-    const MaterialApp(
+     MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ConstellationApp(),
+      theme: ThemeData.dark(),
+      home: ConstellationApp(cameras: cameras),
     ),
   );
 }
 
 class ConstellationApp extends StatelessWidget {
-  const ConstellationApp({super.key});
+  const ConstellationApp({super.key, required this.cameras});
+
+  final List<CameraDescription> cameras;
 
   void handleNewPostPressed(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const NewImagePostScreen()),
+      MaterialPageRoute(builder: (context) => NewImagePostScreen(cameras: cameras)),
     );
   }
 
