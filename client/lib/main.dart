@@ -49,30 +49,35 @@ class ConstellationApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "🌌 Constellation",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Center(
+          child: Text(
+            "🌌 Constellation",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(),
-                IconButton(
-                  onPressed: () => handleNewPostPressed(context),
-                  icon: Icon(Icons.add),
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: handleFriendsPressed,
-                  icon: Icon(Icons.people),
-                ),
-                Spacer(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  IconButton(
+                    onPressed: () => handleNewPostPressed(context),
+                    icon: Icon(Icons.add),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: handleFriendsPressed,
+                    icon: Icon(Icons.people),
+                  ),
+                  Spacer(),
+                ],
+              ),
             ),
           ),
         ],
