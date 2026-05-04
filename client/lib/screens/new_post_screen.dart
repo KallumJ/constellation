@@ -1,4 +1,5 @@
 import 'package:constellation/widgets/address_renderer.dart';
+import 'package:constellation/widgets/constellation_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:multicamera/multicamera.dart';
@@ -83,9 +84,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    final currentPos = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.low),
-    );
+    final currentPos = await Geolocator.getCurrentPosition();
 
     print(currentPos);
 
@@ -99,6 +98,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const ConstellationAppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -125,7 +125,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
               ),
             ],
           ),
-          Spacer(),
           Center(
             child: Builder(
               builder: (context) {
@@ -137,6 +136,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
               },
             ),
           ),
+          Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Row(

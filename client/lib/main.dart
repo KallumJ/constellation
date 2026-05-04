@@ -1,4 +1,5 @@
 import 'package:constellation/screens/new_post_screen.dart';
+import 'package:constellation/widgets/constellation_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,14 +41,7 @@ class ConstellationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "🌌 Constellation",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
+      appBar: const ConstellationAppBar(),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.add), label: "New Post"),
