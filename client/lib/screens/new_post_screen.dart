@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:constellation/widgets/address_renderer.dart';
 import 'package:constellation/widgets/constellation_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
   late final Camera backCamera;
   late Position? geotag;
   bool frontCameraActive = false;
+  late Uint8List? frontPhoto;
+  late Uint8List? backPhoto;
 
   @override
   void initState() {
@@ -23,21 +27,25 @@ class _NewPostScreenState extends State<NewPostScreen> {
     frontCamera = Camera(direction: CameraDirection.front);
     backCamera = Camera(direction: CameraDirection.back);
     geotag = null;
+    backPhoto = null;
+    frontPhoto = null;
     frontCamera.initialize();
     backCamera.initialize();
   }
 
   Future<void> takePhoto() async {
-    final backPhoto = await backCamera.captureImage();
+    final backPhotoData = await backCamera.captureImage();
+
+    setState(() {
+      backPhoto = backPhotoData;
+    });
 
     if (frontCameraActive) {
-      final frontPhoto = await frontCamera.captureImage();
-    }
+      final frontPhotoData = await frontCamera.captureImage();
 
-    if (backPhoto case final data?) {
-      Image.memory(data);
-
-      // TODO: now what?
+      setState(() {
+        frontPhoto = frontPhotoData;
+      });
     }
   }
 
@@ -86,8 +94,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
     // continue accessing the position of the device.
     final currentPos = await Geolocator.getCurrentPosition();
 
-    print(currentPos);
-
     setState(() {
       geotag = currentPos;
     });
@@ -105,22 +111,40 @@ class _NewPostScreenState extends State<NewPostScreen> {
           Spacer(),
           Stack(
             children: [
-              Center(child: CameraPreview(camera: backCamera)),
+              Center(
+                child: Builder(
+                  builder: (context) {
+                    if (backPhoto != null) {
+                      if (backPhoto case final data?) {
+                        return Image.memory(data);
+                      }
+                    }
+
+                    return CameraPreview(camera: backCamera);
+                  },
+                ),
+              ),
               Positioned(
                 top: 16,
                 right: 0,
-                child: Builder(
-                  builder: (context) {
-                    if (frontCameraActive) {
-                      return SizedBox(
-                        width: 150,
-                        height: 150,
-                        child: CameraPreview(camera: frontCamera),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                child: SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: Builder(
+                    builder: (context) {
+                      if (frontCameraActive) {
+                        if (frontPhoto != null) {
+                          if (frontPhoto case final data?) {
+                            return Image.memory(data);
+                          }
+                        }
+                  
+                        return CameraPreview(camera: frontCamera);
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                 ),
               ),
             ],
@@ -129,7 +153,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
             child: Builder(
               builder: (context) {
                 if (geotag != null) {
-                  return AddressRenderer(position: geotag!, style: const TextStyle(fontSize: 16, color: Colors.white));
+                  return AddressRenderer(
+                    position: geotag!,
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                  );
                 } else {
                   return Container();
                 }
