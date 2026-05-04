@@ -1,3 +1,4 @@
+import 'package:constellation/widgets/address_renderer.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:multicamera/multicamera.dart';
@@ -82,7 +83,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    final currentPos = await Geolocator.getCurrentPosition();
+    final currentPos = await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.low),
+    );
 
     print(currentPos);
 
@@ -123,6 +126,17 @@ class _NewPostScreenState extends State<NewPostScreen> {
             ],
           ),
           Spacer(),
+          Center(
+            child: Builder(
+              builder: (context) {
+                if (geotag != null) {
+                  return AddressRenderer(position: geotag!, style: const TextStyle(fontSize: 16, color: Colors.white));
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 24.0),
             child: Row(
